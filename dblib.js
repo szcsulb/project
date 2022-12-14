@@ -24,8 +24,12 @@ const getTotalRecords = () => {
             }
         });
 };
+const importCustomers = ( customers ) => {
+    customers.forEach( customer => {
+        insertCustomer( customer.split( ',' ) );
+    });
+}
 const insertCustomer = (cust) => {
-    // Will accept either a product array or product object
     if (cust instanceof Array) {
         params = cust;
     } else {
@@ -50,12 +54,12 @@ const insertCustomer = (cust) => {
         });
 };
 const getCustomer = ( cusId ) => {
-    console.log( cusId );
+    //console.log( cusId );
     params = [cusId];
     sql = "SELECT * FROM customer WHERE cusId = $1";
     return pool.query(sql, params)
         .then(result => {
-            console.log( result );
+            //console.log( result );
             return { 
                 trans: "success",
                 result: result.rows
@@ -108,8 +112,8 @@ const findCustomers = (cust) => {
 
     sql += ` ORDER BY cusId`;
     // for debugging
-     console.log("sql: " + sql);
-     console.log("params: " + params);
+    // console.log("sql: " + sql);
+    // console.log("params: " + params);
 
     return pool.query(sql, params)
         .then(result => {
@@ -130,4 +134,5 @@ const findCustomers = (cust) => {
 module.exports.getCustomer = getCustomer;
 module.exports.findCustomers = findCustomers;
 module.exports.insertCustomer = insertCustomer;
+module.exports.importCustomers = importCustomers;
 module.exports.getTotalRecords = getTotalRecords;

@@ -1,0 +1,8 @@
+<%- include("_header") -%>
+<h2>Customer Import</h2>
+<h4>Total number of records in the database: <%= totRecs %></h4>
+<p>Select a customer file to import.</p>
+<form action="/import" name="files" method="post" enctype="multipart/form-data">
+    <input type="file" name="filename" id="filename" />
+    <input type="submit" name="submit" value="Import" />
+</form>

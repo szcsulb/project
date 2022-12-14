@@ -1,17 +1,19 @@
 // Required modules 
 const express = require("express");
-const app = express();
 const dblib = require("./dblib.js");
 
 const multer = require("multer");
-const upload = multer();
+
+const app = express();
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 // Add middleware to parse default urlencoded form
 app.use(express.urlencoded({ extended: false }));
 
 // Setup EJS
 app.set("view engine", "ejs");
-
 // Enable CORS (see https://enable-cors.org/server_expressjs.html)
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -21,7 +23,6 @@ app.use((req, res, next) => {
     );
     next();
 });
-
 // Application folders
 app.use(express.static("public"));
 
@@ -47,12 +48,33 @@ app.get("/edit/:cusId", (req, res) => {
         });
 });
 
-app.get("/create", (req, res) => {
-    res.render("create");
+app.get( "/import", async ( req, res ) => {
+    const totRecs = await dblib.getTotalRecords();
+    res.render( "import", {totRecs: totRecs.totRecords } );
+});
+app.post("/import", upload.single("filename"), async ( req, res, next ) => { // myFile should be the same value as used in HTML name attribute of input
+    const file = req.file; // We get the file in req.file
+  
+    if (!file) { // in case we do not get a file we return
+      const error = new Error("Please upload a file");
+      error.httpStatusCode = 400;
+      return req.next(error);
+    }
+    const multerText = Buffer.from(file.buffer).toString("utf-8"); // this reads and converts the contents of the text file into string
+
+    const customers = multerText.split( "\r\n" );
+    customers.forEach( customer => {
+        dblib.insertCustomer( customer.split( ',' ) );
+    });
+    const totRecs = await dblib.getTotalRecords();
+    res.render( "import", { totRecs: totRecs.totRecords } );
 });
 
+app.get( "/create", ( req, res ) => {
+    res.render( "create" );
+});
 
-app.post("/create", (req, res) => {
+app.post( "/create", (req, res ) => {
     dblib.insertCustomer( req.body )
         .then(result => {
             res.render("create", {
@@ -94,8 +116,6 @@ app.post("/manage", async (req, res) => {
 
     dblib.findCustomers(req.body)
         .then(result => {
-            console.log( `result:` );
-            console.log( result );
             res.render("manage", {
                 type: "post",
                 totRecs: totRecs.totRecords,
