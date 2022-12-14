@@ -10,8 +10,8 @@ const pool = new Pool({
 });
 
 const getTotalRecords = () => {
-    sql = "SELECT COUNT(*) FROM product";
-    return pool.query(sql)
+    sql = "SELECT COUNT(*) FROM customer";
+    return pool.query( sql )
         .then(result => {
             return {
                 msg: "success",
@@ -24,63 +24,89 @@ const getTotalRecords = () => {
             }
         });
 };
-const insertProduct = (product) => {
+const insertCustomer = (cust) => {
     // Will accept either a product array or product object
-    if (product instanceof Array) {
-        params = product;
+    if (cust instanceof Array) {
+        params = cust;
     } else {
-        params = Object.values(product);
+        params = Object.values(cust);
     };
 
-    const sql = `INSERT INTO product (prod_id, prod_name, prod_desc, prod_price)
-                 VALUES ($1, $2, $3, $4)`;
+    const sql = `INSERT INTO customer (cusId, cusFname, cusLname, cusState, cusSalesYTD, cusSalesPrev)
+                 VALUES ($1, $2, $3, $4, $5, $6)`;
 
     return pool.query(sql, params)
         .then(res => {
             return {
                 trans: "success", 
-                msg: `Product id ${params[0]} successfully inserted`
+                msg: `Customer id ${params[0]} successfully inserted`
             };
         })
         .catch(err => {
             return {
                 trans: "fail", 
-                msg: `Error on insert of product id ${params[0]}.  ${err.message}`
+                msg: `Error on insert of customer id ${params[0]}.  ${err.message}`
             };
         });
 };
-const findProducts = (product) => {
-    // Will build query based on data provided in the form
-    //  Use parameters to avoid sql injection
+const getCustomer = ( cusId ) => {
+    console.log( cusId );
+    params = [cusId];
+    sql = "SELECT * FROM customer WHERE cusId = $1";
+    return pool.query(sql, params)
+        .then(result => {
+            console.log( result );
+            return { 
+                trans: "success",
+                result: result.rows
+            }
+        })
+        .catch(err => {
+            return {
+                trans: "Error",
+                result: `Error: ${err.message}`
+            }
+        });
 
-    // Declare variables
+}
+
+const findCustomers = (cust) => {
     var i = 1;
     params = [];
-    sql = "SELECT * FROM product WHERE true";
+    sql = "SELECT * FROM customer WHERE true";
+    
+    if (cust.cusId !== "") {
+        params.push(Number(cust.cusId));
+        sql += ` AND cusId = $${i}`;
+        i++;
+    };
+    if (cust.cusFname !== "") {
+        params.push(`${cust.cusFname}%`);
+        sql += ` AND UPPER(cusFname) LIKE UPPER($${i})`;
+        i++;
+    };
+    if (cust.cusLname !== "") {
+        params.push(`${cust.cusLname}%`);
+        sql += ` AND UPPER(cusLname) LIKE UPPER($${i})`;
+        i++;
+    };
+    if (cust.cusState !== "") {
+        params.push(`${cust.cusState}`);
+        sql += ` AND cusState = $${i}`;
+        i++;
+    };
+    if (cust.cusSalesYTD !== "") {
+        params.push(parseFloat(cust.cusSalesYTD));
+        sql += ` AND cusSalesYTD >= $${i}`;
+        i++;
+    };
+    if (cust.cusSalesPrev !== "") {
+        params.push(parseFloat(cust.cusSalesPrev));
+        sql += ` AND cusSalesPrev >= $${i}`;
+        i++;
+    };
 
-    // Check data provided and build query as necessary
-    if (product.prod_id !== "") {
-        params.push(parseInt(product.prod_id));
-        sql += ` AND prod_id = $${i}`;
-        i++;
-    };
-    if (product.prod_name !== "") {
-        params.push(`${product.prod_name}%`);
-        sql += ` AND UPPER(prod_name) LIKE UPPER($${i})`;
-        i++;
-    };
-    if (product.prod_desc !== "") {
-        params.push(`${product.prod_desc}%`);
-        sql += ` AND UPPER(prod_desc) LIKE UPPER($${i})`;
-        i++;
-    };
-    if (product.prod_price !== "") {
-        params.push(parseFloat(product.prod_price));
-        sql += ` AND prod_price >= $${i}`;
-        i++;
-    };
-
-    sql += ` ORDER BY prod_id`;
+    sql += ` ORDER BY cusId`;
     // for debugging
      console.log("sql: " + sql);
      console.log("params: " + params);
@@ -101,6 +127,7 @@ const findProducts = (product) => {
 };
 
 // Add towards the bottom of the page
-module.exports.findProducts = findProducts;
-module.exports.insertProduct = insertProduct;
+module.exports.getCustomer = getCustomer;
+module.exports.findCustomers = findCustomers;
+module.exports.insertCustomer = insertCustomer;
 module.exports.getTotalRecords = getTotalRecords;

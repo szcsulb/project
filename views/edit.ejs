@@ -1,0 +1,54 @@
+<%- include("_header") -%>
+
+<h2>Update Customer</h2>
+
+<!-- Not using bootstrap, just a simple form that you may enhance -->
+
+<% if (result.length === 0) { %>
+    <h3>No records found!</h3>
+<% } else { %>
+<% result.forEach(cust => { %> 
+<form action="/edit/<$= cusId %>" method="POST">
+    <table>
+        <tr>
+            <td><label for="cusId">ID</label>:</td>
+            <td><input type="number" name="cusId" id="cusId" value="<%= cust.cusid %>" readonly disabled/></td>
+            <td>(equal)</td>
+        </tr>
+        <tr>
+            <td><label for="cusFname">First Name</label>:</td>
+            <td><input type="text" name="cusFname" id="cusFname" value="<%= cust.cusfname %>" /></td>
+            <td>(starts with)</td>
+        </tr>
+        <tr>
+            <td><label for="cusLname">Last Name</label>:</td>
+            <td><input type="text" name="cusLname" id="cusLname" value="<%= cust.cuslname %>" /></td>
+            <td>(starts with)</td>
+        </tr>
+        <tr>
+            <td><label for="cusState">State</label>:</td>
+            <td><input type="text" name="cusState" id="cusState" value="<%= cust.cusstate %>" /></td>
+            <td>(equal)</td>
+        </tr>
+        <tr>
+            <td><label for="cusSalesYTD">Sales YTD</label>:</td>
+            <td><input type="text" name="cusSalesYTD" id="cusSalesYTD" value="<%= cust.cussalesytd %>" /></td>
+            <td>(greater than or equal)</td>
+        </tr>
+        <tr>
+            <td><label for="cusSalesPrev">Sales Previous</label>:</td>
+            <td><input type="text" name="cusSalesPrev" id="cusSalesPrev" value="<%= cust.cussalesprev %>" /></td>
+            <td>(greater than or equal)</td>
+        </tr>
+        <tr>
+            <td colspan="3" align="center">
+                <input type="submit" value="Update" />
+                <input type="reset" value="Reset" />
+            </td>
+        </tr>
+    </table>
+</form>
+
+<% }); %>
+<% } %>
+<%- include("_footer") -%>

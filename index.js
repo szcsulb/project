@@ -30,43 +30,85 @@ app.get("/", (req, res) => {
     //res.send("Root resource - Up and running!")
     res.render("index");
 });
-app.get("/search", async (req, res) => {
+
+app.get("/edit/:cusId", (req, res) => {
+    dblib.getCustomer( req.params.cusId )
+        .then( result => {
+            res.render("edit", {
+                cusId: req.params.cusId,
+                result: result.result
+            });
+        })
+        .catch( err => {
+            res.render("edit", {
+                cusId: req.params.cusId,
+                cust: `Unexpected Error: ${err.message}`
+            });
+        });
+});
+
+app.get("/create", (req, res) => {
+    res.render("create");
+});
+
+
+app.post("/create", (req, res) => {
+    dblib.insertCustomer( req.body )
+        .then(result => {
+            res.render("create", {
+                type: "post",
+                message: "Customer Created Successfully!"
+            })
+        })
+        .catch(err => {
+            res.render("create", {
+                type: "post",
+                message: "Customer Creation Failed!"
+            })
+        });
+});
+
+app.get("/manage", async (req, res) => {
     // Omitted validation check
     const totRecs = await dblib.getTotalRecords();
     //Create an empty product object (To populate form with values)
-    const prod = {
-        prod_id: "",
-        prod_name: "",
-        prod_desc: "",
-        prod_price: ""
+    const cust = {
+        cusId: "",
+        cusFname: "",
+        cusLname: "",
+        cusState: "",
+        cusSalesYTD: "",
+        cusSalesPrev: ""
     };
-    res.render("search", {
+    res.render("manage", {
         type: "get",
         totRecs: totRecs.totRecords,
-        prod: prod
+        cust: cust
     });
 });
-app.post("/search", async (req, res) => {
+app.post("/manage", async (req, res) => {
     // Omitted validation check
     //  Can get totRecs from the page rather than using another DB call.
     //  Add it as a hidden form value.
     const totRecs = await dblib.getTotalRecords();
 
-    dblib.findProducts(req.body)
+    dblib.findCustomers(req.body)
         .then(result => {
-            res.render("search", {
+            console.log( `result:` );
+            console.log( result );
+            res.render("manage", {
                 type: "post",
                 totRecs: totRecs.totRecords,
-                result: result,
-                prod: req.body
+                result: result.result,
+                cust: req.body
             })
         })
         .catch(err => {
-            res.render("search", {
+            res.render("manage", {
                 type: "post",
                 totRecs: totRecs.totRecords,
                 result: `Unexpected Error: ${err.message}`,
-                prod: req.body
+                cust: req.body
             });
         });
 });

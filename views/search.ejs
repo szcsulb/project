@@ -45,18 +45,22 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Name</th>
-                    <th>Desc</th>
-                    <th>Price</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>State</th>
+                    <th>YTD</th>
+                    <th>Prev</th>
                 </tr>
             </thead>
             <tbody>
-                <% result.result.forEach(product => { %> 
+                <% result.result.forEach(cust => { %> 
                     <tr>
-                        <td><%= product.prod_id %></td>
-                        <td><%= product.prod_name %></td>
-                        <td><%= product.prod_desc %></td>
-                        <td><%= product.prod_price %></td>
+                        <td><%= cust.cusId %></td>
+                        <td><%= cust.cusFname %></td>
+                        <td><%= cust.cusLname %></td>
+                        <td><%= cust.cusState %></td>
+                        <td><%= cust.cusSalesYTD %></td>
+                        <td><%= cust.cusSalesPrev %></td>
                     </tr>
                 <% }); %>
             </tbody>
