@@ -38,7 +38,7 @@
             <td>(greater than or equal)</td>
         </tr>
         <tr>
-            <td colspan="3" align="center">
+            <td colspan="2" align="center">
                 <input type="submit" value="Find" />
                 <input type="reset" value="Reset" />
             </td>
@@ -60,7 +60,7 @@
                     <th>State</th>
                     <th>YTD</th>
                     <th>Prev</th>
-                    <th><a href="/create">Create</a></th>
+                    <th><a class="btn btn-success" href="/create">Create</a></th>
                 </tr>
             </thead>
             <tbody>
@@ -72,7 +72,7 @@
                         <td><%= cust.cusstate %></td>
                         <td><%= cust.cussalesytd %></td>
                         <td><%= cust.cussalesprev %></td>
-                        <td><a href="/edit/<%= cust.cusid %>">Edit</a> | <a href="/delete/<%= cust.cusid %>">Del</a></td>
+                        <td><a class="btn btn-warning" href="/edit/<%= cust.cusid %>">Edit</a>&nbsp;<a class="btn btn-danger" href="/delete/<%= cust.cusid %>">Del</a></td>
                     </tr>
                 <% }); %>
             </tbody>

@@ -1,0 +1,9 @@
+<%- include("_header") -%>
+<h2>Customer Import</h2>
+<h4>Total number of records in the database: <%= totRecs %></h4>
+<p>Please enter a filename for your data export.</p>
+<form action="/export" name="files" method="post">
+    <input type="text" name="filename" id="filename" />
+    <input type="submit" name="submit" value="Export" />
+</form>
+<%- include("_footer") -%>

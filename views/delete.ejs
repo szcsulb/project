@@ -1,0 +1,47 @@
+<%- include("_header") -%>
+
+<h2>Delete Customer</h2>
+
+<!-- Not using bootstrap, just a simple form that you may enhance -->
+
+<% if ( cusid == '' ) { %>
+    <h3>No records found!</h3>
+<% } else { %>
+<form action="/delete/<%= cusid %>" method="POST">
+    <table>
+        <tr>
+            <td><label for="cusId">ID</label>:</td>
+            <td><input type="number" name="cusId" id="cusId" value="<%= cusid %>" readonly <% if( type == 'post' ) { %> disabled <% } %> /></td>
+        </tr>
+        <tr>
+            <td><label for="cusFname">First Name</label>:</td>
+            <td><input type="text" name="cusFname" id="cusFname" value="<%= cusfname %>" readonly <% if( type == 'post' ) { %> disabled <% } %> /></td>
+        </tr>
+        <tr>
+            <td><label for="cusLname">Last Name</label>:</td>
+            <td><input type="text" name="cusLname" id="cusLname" value="<%= cuslname %>"  readonly <% if( type == 'post' ) { %> disabled <% } %> /></td>
+        </tr>
+        <tr>
+            <td><label for="cusState">State</label>:</td>
+            <td><input type="text" name="cusState" id="cusState" value="<%= cusstate %>" readonly <% if( type == 'post' ) { %> disabled <% } %> /></td>
+        </tr>
+        <tr>
+            <td><label for="cusSalesYTD">Sales YTD</label>:</td>
+            <td><input type="text" name="cusSalesYTD" id="cusSalesYTD" value="<%= cussalesytd %>" readonly <% if( type == 'post' ) { %> disabled <% } %> /></td>
+        </tr>
+        <tr>
+            <td><label for="cusSalesPrev">Sales Previous</label>:</td>
+            <td><input type="text" name="cusSalesPrev" id="cusSalesPrev" value="<%= cussalesprev %>" readonly <% if( type == 'post' ) { %> disabled <% } %> /></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <input type="submit" value="Delete" />
+                <input type="reset" value="Reset" />
+            </td>
+        </tr>
+    </table>
+</form>
+
+<% } %>
+<%= message %>
+<%- include("_footer") -%>

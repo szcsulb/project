@@ -6,3 +6,16 @@
     <input type="file" name="filename" id="filename" />
     <input type="submit" name="submit" value="Import" />
 </form>
+<% if( type == 'post' ) { %>
+    <h3>Processed: <%= recsProcessed %></h3>
+    <h3>Successful: <%= recsSuccessful %></h3>
+    <h3>Failed: <%= recsFailed %></h3>
+    <% if( errors.length != 0 ) { %>
+    <hr />
+    <h3>Errors</h3>
+    <% errors.forEach( error => { %>
+        <p><%= error %></p>
+    <% }); %>
+    <% } %>
+<% } %>
+<%- include("_footer") -%>
